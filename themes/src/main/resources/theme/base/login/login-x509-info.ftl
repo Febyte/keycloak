@@ -5,6 +5,9 @@
     <#elseif section = "form">
 
         <form id="kc-x509-login-info" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+            <#if csrftoken??>
+                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+            </#if>
             <div class="${properties.kcFormGroupClass!}">
 
                 <div class="${properties.kcLabelWrapperClass!}">

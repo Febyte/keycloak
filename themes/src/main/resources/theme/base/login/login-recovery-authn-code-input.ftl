@@ -5,6 +5,9 @@
         ${msg("auth-recovery-code-header")}
     <#elseif section = "form">
         <form id="kc-recovery-code-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+            <#if csrftoken??>
+                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+            </#if>
             <div class="${properties.kcFormGroupClass!}">
                 <div class="${properties.kcLabelWrapperClass!}">
                     <label for="recoveryCodeInput" class="${properties.kcLabelClass!}">${msg("auth-recovery-code-prompt", recoveryAuthnCodesInputBean.codeNumber?c)}</label>

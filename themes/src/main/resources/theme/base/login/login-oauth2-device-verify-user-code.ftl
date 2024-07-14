@@ -4,6 +4,9 @@
         ${msg("oauth2DeviceVerificationTitle")}
     <#elseif section = "form">
         <form id="kc-user-verify-device-user-code-form" class="${properties.kcFormClass!}" action="${url.oauth2DeviceVerificationAction}" method="post">
+            <#if csrftoken??>
+                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+            </#if>
             <div class="${properties.kcFormGroupClass!}">
                 <div class="${properties.kcLabelWrapperClass!}">
                     <label for="device-user-code" class="${properties.kcLabelClass!}">${msg("verifyOAuth2DeviceUserCode")}</label>

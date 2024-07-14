@@ -33,6 +33,7 @@ import org.keycloak.broker.provider.BrokeredIdentityContext;
 import org.keycloak.common.Profile;
 import org.keycloak.common.Profile.Feature;
 import org.keycloak.common.util.ObjectUtil;
+import org.keycloak.common.util.SecretGenerator;
 import org.keycloak.forms.login.LoginFormsPages;
 import org.keycloak.forms.login.LoginFormsProvider;
 import org.keycloak.forms.login.MessageType;
@@ -548,6 +549,18 @@ public class FreeMarkerLoginFormsProvider implements LoginFormsProvider {
         if (authenticationSession != null && authenticationSession.getClientNote(Constants.KC_ACTION_EXECUTING) != null
                 && !Boolean.TRUE.toString().equals(authenticationSession.getClientNote(Constants.KC_ACTION_ENFORCED))) {
             attributes.put("isAppInitiatedAction", true);
+        }
+
+        // JAS: Check to see if the realm is enabled for Anti-CSRF Tokens and put a token in the auth notes.
+        if (realm != null && authenticationSession != null)
+        {
+            String tokenEnabledAttribute = realm.getAttribute("antiCsrfToken");
+            if (tokenEnabledAttribute != null && tokenEnabledAttribute.equals("true")) {
+                String token = SecretGenerator.getInstance().randomString(32, SecretGenerator.ALPHANUM);
+
+                attributes.put("csrftoken", token);
+                authenticationSession.setAuthNote("csrftoken", token);
+            }
         }
     }
 

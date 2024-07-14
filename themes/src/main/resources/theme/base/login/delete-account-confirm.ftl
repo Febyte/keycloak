@@ -7,7 +7,9 @@
    <#elseif section = "form">
 
     <form action="${url.loginAction}" class="form-vertical" method="post">
-
+       <#if csrftoken??>
+           <input type="hidden" name="csrftoken" value="${csrftoken}" />
+       </#if>
        <div class="alert alert-warning" style="margin-top:0 !important;margin-bottom:30px !important">
            <span class="pficon pficon-warning-triangle-o"></span>
            ${msg("irreversibleAction")}

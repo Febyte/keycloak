@@ -10,6 +10,9 @@
     <#elseif section = "form">
 
         <form id="register" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+            <#if csrftoken??>
+                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+            </#if>
             <div class="${properties.kcFormGroupClass!}">
                 <input type="hidden" id="clientDataJSON" name="clientDataJSON"/>
                 <input type="hidden" id="attestationObject" name="attestationObject"/>
@@ -53,6 +56,9 @@
         <#if !isSetRetry?has_content && isAppInitiatedAction?has_content>
             <form action="${url.loginAction}" class="${properties.kcFormClass!}" id="kc-webauthn-settings-form"
                   method="post">
+                <#if csrftoken??>
+                    <input type="hidden" name="csrftoken" value="${csrftoken}" />
+                </#if>
                 <button type="submit"
                         class="${properties.kcButtonClass!} ${properties.kcButtonDefaultClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
                         id="cancelWebAuthnAIA" name="cancel-aia" value="true">${msg("doCancel")}

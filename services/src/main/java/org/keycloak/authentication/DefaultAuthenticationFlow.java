@@ -89,6 +89,17 @@ public class DefaultAuthenticationFlow implements AuthenticationFlow {
             MultivaluedMap<String, String> inputData = processor.getRequest().getDecodedFormParameters();
             String authExecId = inputData.getFirst(Constants.AUTHENTICATION_EXECUTION);
 
+            // JAS: Check to see if the realm is enabled for Anti-CSRF Tokens and compare the form token with the note token.
+            String tokenEnabledAttribute = processor.realm.getAttribute("antiCsrfToken");
+            if (tokenEnabledAttribute != null && tokenEnabledAttribute.equals("true")) {
+                String token = processor.getAuthenticationSession().getAuthNote("csrftoken");
+                String formToken = inputData.getFirst("csrftoken");
+
+                if (formToken == null || !formToken.equals(token)) {
+                    throw new AuthenticationFlowException("invalid anti-CSRF token", AuthenticationFlowError.INTERNAL_ERROR);
+                }
+            }
+
             // User clicked on "try another way" link
             if (inputData.containsKey("tryAnotherWay")) {
                 logger.trace("User clicked on link 'Try Another Way'");

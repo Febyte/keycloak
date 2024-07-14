@@ -7,6 +7,9 @@
     <#elseif section = "form">
         <div id="kc-form-webauthn" class="${properties.kcFormClass!}">
             <form id="webauth" action="${url.loginAction}" method="post">
+                <#if csrftoken??>
+                   <input type="hidden" name="csrftoken" value="${csrftoken}" />
+                </#if>
                 <input type="hidden" id="clientDataJSON" name="clientDataJSON"/>
                 <input type="hidden" id="authenticatorData" name="authenticatorData"/>
                 <input type="hidden" id="signature" name="signature"/>

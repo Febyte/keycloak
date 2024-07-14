@@ -6,6 +6,9 @@
         ${kcSanitize(msg("passkey-login-title"))?no_esc}
     <#elseif section = "form">
         <form id="webauth" action="${url.loginAction}" method="post">
+            <#if csrftoken??>
+                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+            </#if>
             <input type="hidden" id="clientDataJSON" name="clientDataJSON"/>
             <input type="hidden" id="authenticatorData" name="authenticatorData"/>
             <input type="hidden" id="signature" name="signature"/>
@@ -71,6 +74,9 @@
                 <div id="kc-form-wrapper">
                     <#if realm.password>
                         <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}" method="post" style="display:none">
+                            <#if csrftoken??>
+                                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+                            </#if>
                             <#if !usernameHidden??>
                                 <div class="${properties.kcFormGroupClass!}">
                                     <label for="username" class="${properties.kcLabelClass!}">${msg("passkey-autofill-select")}</label>

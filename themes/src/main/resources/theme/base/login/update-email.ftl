@@ -6,6 +6,9 @@
         ${msg("updateEmailTitle")}
     <#elseif section = "form">
         <form id="kc-update-email-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+            <#if csrftoken??>
+                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+            </#if>
             <@userProfileCommons.userProfileFormFields/>
 
             <div class="${properties.kcFormGroupClass!}">

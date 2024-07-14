@@ -7,6 +7,9 @@
     <#elseif section = "form">
 
         <form id="kc-select-credential-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+            <#if csrftoken??>
+                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+            </#if>
             <div class="${properties.kcSelectAuthListClass!}">
                 <#list auth.authenticationSelections as authenticationSelection>
                     <button class="${properties.kcSelectAuthListItemClass!}" type="submit" name="authenticationExecution" value="${authenticationSelection.authExecId}">

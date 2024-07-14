@@ -47,6 +47,9 @@
     </div>
 
     <form action="${url.loginAction}" class="${properties.kcFormGroupClass!}" id="kc-recovery-codes-settings-form" method="post">
+        <#if csrftoken??>
+            <input type="hidden" name="csrftoken" value="${csrftoken}" />
+        </#if>
         <input type="hidden" name="generatedRecoveryAuthnCodes" value="${recoveryAuthnCodesConfigBean.generatedRecoveryAuthnCodesAsString}" />
         <input type="hidden" name="generatedAt" value="${recoveryAuthnCodesConfigBean.generatedAt?c}" />
         <input type="hidden" id="userLabel" name="userLabel" value="${msg("recovery-codes-label-default")}" />

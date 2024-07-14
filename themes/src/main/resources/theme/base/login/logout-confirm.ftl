@@ -7,6 +7,9 @@
             <p class="instruction">${msg("logoutConfirmHeader")}</p>
 
             <form class="form-actions" action="${url.logoutConfirmAction}" method="POST">
+                <#if csrftoken??>
+                    <input type="hidden" name="csrftoken" value="${csrftoken}" />
+                </#if>
                 <input type="hidden" name="session_code" value="${logoutConfirm.code}">
                 <div class="${properties.kcFormGroupClass!}">
                     <div id="kc-form-options">

@@ -47,6 +47,9 @@
             </#if>
 
             <form class="form-actions" action="${url.oauthAction}" method="POST">
+                <#if csrftoken??>
+                    <input type="hidden" name="csrftoken" value="${csrftoken}" />
+                </#if>
                 <input type="hidden" name="code" value="${oauth.code}">
                 <div class="${properties.kcFormGroupClass!}">
                     <div id="kc-form-options">

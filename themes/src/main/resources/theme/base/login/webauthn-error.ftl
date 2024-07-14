@@ -14,6 +14,9 @@
 
         <form id="kc-error-credential-form" class="${properties.kcFormClass!}" action="${url.loginAction}"
               method="post">
+            <#if csrftoken??>
+                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+            </#if>
             <input type="hidden" id="executionValue" name="authenticationExecution"/>
             <input type="hidden" id="isSetRetry" name="isSetRetry"/>
         </form>
@@ -25,6 +28,9 @@
 
         <#if isAppInitiatedAction??>
             <form action="${url.loginAction}" class="${properties.kcFormClass!}" id="kc-webauthn-settings-form" method="post">
+                <#if csrftoken??>
+                    <input type="hidden" name="csrftoken" value="${csrftoken}" />
+                </#if>
                 <button type="submit"
                         class="${properties.kcButtonClass!} ${properties.kcButtonDefaultClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
                         id="cancelWebAuthnAIA" name="cancel-aia" value="true">${msg("doCancel")}

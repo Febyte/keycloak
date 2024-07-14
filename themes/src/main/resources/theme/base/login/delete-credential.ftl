@@ -7,6 +7,9 @@
         ${msg("deleteCredentialMessage", credentialLabel)}
     </div>
     <form class="form-actions" action="${url.loginAction}" method="POST">
+        <#if csrftoken??>
+            <input type="hidden" name="csrftoken" value="${csrftoken}" />
+        </#if>
         <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonLargeClass!}" name="accept" id="kc-accept" type="submit" value="${msg("doConfirmDelete")}"/>
         <input class="${properties.kcButtonClass!} ${properties.kcButtonDefaultClass!} ${properties.kcButtonLargeClass!}" name="cancel-aia" value="${msg("doCancel")}" id="kc-decline" type="submit" />
     </form>

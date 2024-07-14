@@ -6,6 +6,9 @@
         <script>window.onload = function() {document.forms[0].submit()};</script>
         <p>${msg("saml.post-form.message")}</p>
         <form name="saml-post-binding" method="post" action="${samlPost.url}">
+            <#if csrftoken??>
+                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+            </#if>
             <#if samlPost.SAMLRequest??>
                 <input type="hidden" name="SAMLRequest" value="${samlPost.SAMLRequest}"/>
             </#if>

@@ -5,6 +5,9 @@
         ${msg("loginProfileTitle")}
     <#elseif section = "form">
         <form id="kc-update-profile-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+            <#if csrftoken??>
+                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+            </#if>
 
             <@userProfileCommons.userProfileFormFields/>
 

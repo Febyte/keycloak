@@ -5,6 +5,9 @@
     <#elseif section="form">
         <form id="kc-otp-login-form" class="${properties.kcFormClass!}" action="${url.loginAction}"
             method="post">
+            <#if csrftoken??>
+                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+            </#if>
             <#if otpLogin.userOtpCredentials?size gt 1>
                 <div class="${properties.kcFormGroupClass!}">
                     <div class="${properties.kcInputWrapperClass!}">

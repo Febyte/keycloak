@@ -51,6 +51,9 @@
         </ol>
 
         <form action="${url.loginAction}" class="${properties.kcFormClass!}" id="kc-totp-settings-form" method="post">
+            <#if csrftoken??>
+                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+            </#if>
             <div class="${properties.kcFormGroupClass!}">
                 <div class="${properties.kcInputWrapperClass!}">
                     <label for="totp" class="control-label">${msg("authenticatorCode")}</label> <span class="required">*</span>

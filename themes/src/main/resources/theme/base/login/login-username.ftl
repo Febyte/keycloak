@@ -8,6 +8,9 @@
                 <#if realm.password>
                     <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}"
                           method="post">
+                        <#if csrftoken??>
+                            <input type="hidden" name="csrftoken" value="${csrftoken}" />
+                        </#if>
                         <#if !usernameHidden??>
                             <div class="${properties.kcFormGroupClass!}">
                                 <label for="username"

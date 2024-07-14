@@ -7,6 +7,9 @@
             <div id="kc-form-wrapper">
                 <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}"
                       method="post">
+                    <#if csrftoken??>
+                        <input type="hidden" name="csrftoken" value="${csrftoken}" />
+                    </#if>
                     <div class="${properties.kcFormGroupClass!} no-bottom-margin">
                         <hr/>
                         <label for="password" class="${properties.kcLabelClass!}">${msg("password")}</label>

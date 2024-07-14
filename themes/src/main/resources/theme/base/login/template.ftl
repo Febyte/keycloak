@@ -141,6 +141,9 @@
 
           <#if auth?has_content && auth.showTryAnotherWayLink()>
               <form id="kc-select-try-another-way-form" action="${url.loginAction}" method="post">
+                  <#if csrftoken??>
+                      <input type="hidden" name="csrftoken" value="${csrftoken}" />
+                  </#if>
                   <div class="${properties.kcFormGroupClass!}">
                       <input type="hidden" name="tryAnotherWay" value="on"/>
                       <a href="#" id="try-another-way"

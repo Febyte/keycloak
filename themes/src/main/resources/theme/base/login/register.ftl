@@ -6,7 +6,9 @@
         ${msg("registerTitle")}
     <#elseif section = "form">
         <form id="kc-register-form" class="${properties.kcFormClass!}" action="${url.registrationAction}" method="post">
-
+            <#if csrftoken??>
+                <input type="hidden" name="csrftoken" value="${csrftoken}" />
+            </#if>
             <@userProfileCommons.userProfileFormFields; callback, attribute>
                 <#if callback = "afterField">
                 <#-- render password fields just under the username or email (if used as username) -->

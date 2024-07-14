@@ -7,6 +7,9 @@
         ${kcSanitize(msg("termsText"))?no_esc}
     </div>
     <form class="form-actions" action="${url.loginAction}" method="POST">
+        <#if csrftoken??>
+            <input type="hidden" name="csrftoken" value="${csrftoken}" />
+        </#if>
         <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonLargeClass!}" name="accept" id="kc-accept" type="submit" value="${msg("doAccept")}"/>
         <input class="${properties.kcButtonClass!} ${properties.kcButtonDefaultClass!} ${properties.kcButtonLargeClass!}" name="cancel" id="kc-decline" type="submit" value="${msg("doDecline")}"/>
     </form>

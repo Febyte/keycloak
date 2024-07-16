@@ -1,0 +1,8 @@
+trigger:
+- main
+
+pool: Command
+
+steps:
+- script: JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./mvnw -pl quarkus/deployment,quarkus/dist -am -DskipTests clean install
+  displayName: 'Build Keycloak'

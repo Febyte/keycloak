@@ -7,8 +7,16 @@ steps:
 - script: JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./mvnw -pl quarkus/deployment,quarkus/dist -am -DskipTests clean install
   displayName: 'Build Keycloak'
 
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'quarkus/dist/target'
+    Contents: 'keycloak-*.tar.gz'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+  displayName: 'Copy Build Artifact'
+
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: 'quarkus/dist/target/keycloak-*.tar.gz'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+  displayName: 'Publish Build Artifact'

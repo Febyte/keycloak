@@ -6,3 +6,9 @@ pool: Command
 steps:
 - script: JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./mvnw -pl quarkus/deployment,quarkus/dist -am -DskipTests clean install
   displayName: 'Build Keycloak'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'quarkus/dist/target/keycloak-*.tar.gz'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'

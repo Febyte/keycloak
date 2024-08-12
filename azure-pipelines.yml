@@ -1,0 +1,45 @@
+trigger:
+- febyte/*
+
+pool: Command
+
+steps:
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'clean install'
+    options: '-pl quarkus/deployment,quarkus/dist -am'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'Path'
+    jdkDirectory: '/usr/lib/jvm/jdk-21.0.4-oracle-x64'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+  displayName: Build Keycloak
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'quarkus/dist/target/'
+    Contents: 'keycloak-*.tar.gz'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+  displayName: Stage Distribution
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'quarkus/container/'
+    Contents: |
+      Dockerfile
+      ubi-null.sh
+      entrypoint.sh
+      sshd_config
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+  displayName: Stage Container
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+  displayName: Publish Build Artifacts

@@ -17,7 +17,7 @@ RUN mv /tmp/keycloak/keycloak-* /opt/keycloak && mkdir -p /opt/keycloak/data
 RUN chmod -R g+rwX /opt/keycloak
 
 ADD ubi-null.sh /tmp/
-RUN bash /tmp/ubi-null.sh java-21-openjdk-headless glibc-langpack-en findutils
+RUN bash /tmp/ubi-null.sh glibc-langpack-en findutils rpm openssh-server
 
 FROM registry.access.redhat.com/ubi9-micro
 ENV LANG en_US.UTF-8
@@ -29,15 +29,27 @@ COPY --from=ubi-micro-build /tmp/null/rootfs/ /
 COPY --from=ubi-micro-build --chown=1000:0 /opt/keycloak /opt/keycloak
 
 RUN echo "keycloak:x:0:root" >> /etc/group && \
-    echo "keycloak:x:1000:0:keycloak user:/opt/keycloak:/sbin/nologin" >> /etc/passwd
+    echo "keycloak:x:1000:0:keycloak user:/opt/keycloak:/bin/bash" >> /etc/passwd
 
-USER 1000
+# <SSH>
+RUN echo 'root:Docker!' | chpasswd
+RUN mkdir -m 755 /var/run/sshd
+RUN ssh-keygen -A
+
+COPY sshd_config /etc/ssh/sshd_config
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh
+
+EXPOSE 2222
+# </SSH>
+
+USER 0
 
 EXPOSE 8080
 EXPOSE 8443
 EXPOSE 9000
 
-ENTRYPOINT [ "/opt/keycloak/bin/kc.sh" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
 
 # common labels
 ARG KEYCLOAK_VERSION

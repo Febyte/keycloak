@@ -12,7 +12,7 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     javaHomeOption: 'Path'
-    jdkDirectory: '/usr/lib/jvm/jdk-21.0.4-oracle-x64'
+    jdkDirectory: '/usr/lib/jvm/jdk-17.0.12-oracle-x64'
     mavenVersionOption: 'Default'
     mavenAuthenticateFeed: false
     effectivePomSkip: false

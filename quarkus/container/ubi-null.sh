@@ -40,12 +40,15 @@ echo "==> Installing packages into chroot" >&2
 
 set -x
 # Install requirements for this script (xargs and cmp)
-dnf install -y findutils diffutils
+dnf install -y findutils diffutils wget
 # Install core packages to chroot
 rootfs="$(realpath rootfs)"
 mkdir -p "$rootfs"
 <keep xargs dnf install -y --installroot "$rootfs" --releasever 9 --setopt install_weak_deps=false --nodocs
 dnf --installroot "$rootfs" clean all
+wget -q -O /tmp/jdk-17_linux-x64_bin.rpm https://download.oracle.com/java/17/archive/jdk-17.0.12_linux-x64_bin.rpm
+rpm -r "$rootfs" -i /tmp/jdk-17_linux-x64_bin.rpm
+echo jdk-17 >> keep
 rm -rf "$rootfs"/var/cache/* "$rootfs"/var/log/dnf* "$rootfs"/var/log/yum.*
 { set +x; } 2>/dev/null
 

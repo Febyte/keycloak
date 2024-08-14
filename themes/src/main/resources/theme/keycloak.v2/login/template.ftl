@@ -24,7 +24,7 @@
             <link href="${url.resourcesPath}/${style}" rel="stylesheet" />
         </#list>
     </#if>
-    <script type="importmap">
+    <script type="importmap" nonce="${nonce.script}">
         {
             "imports": {
                 "alpinejs": "${url.resourcesCommonPath}/node_modules/alpinejs/dist/module.esm.js"
@@ -42,7 +42,7 @@
         </#list>
     </#if>
     <#if authenticationSession??>
-        <script type="module">
+        <script type="module" nonce="${nonce.script}">
             import { checkCookiesAndSetTimer } from "${url.resourcesPath}/js/authChecker.js";
 
             checkCookiesAndSetTimer(
@@ -209,7 +209,7 @@
     </main>
   </div>
 </div>
-<script type="module">
+<script type="module" nonce="${nonce.script}">
     import Alpine from "alpinejs";
 
     Alpine.start();

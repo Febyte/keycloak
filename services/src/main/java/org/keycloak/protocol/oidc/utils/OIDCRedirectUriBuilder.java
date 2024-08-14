@@ -167,6 +167,7 @@ public abstract class OIDCRedirectUriBuilder {
             builder.append("  <HEAD>");
             builder.append("    <meta charset=\"utf-8\" />");
             builder.append("    <TITLE>OIDC Form_Post Response</TITLE>");
+            builder.append(this.getRedirectScriptTag());
             builder.append("  </HEAD>");
             builder.append("  <BODY>");
 
@@ -188,7 +189,16 @@ public abstract class OIDCRedirectUriBuilder {
             builder.append("      </NOSCRIPT>");
             builder.append("    </FORM>");
 
-            String javascript = "document.forms[0].submit();";
+            builder.append("  </BODY>");
+            builder.append("</HTML>");
+
+            return Response.status(Response.Status.OK)
+                    .type(MediaType.TEXT_HTML_TYPE)
+                    .entity(builder.toString()).build();
+        }
+
+        private String getRedirectScriptTag() {
+            String javascript = "window.onload = function() { document.forms[0].submit(); };";
 
             try {
                 MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
@@ -201,16 +211,8 @@ public abstract class OIDCRedirectUriBuilder {
                 // JAS: Do nothing.
             }
 
-            builder.append("    <script>" + javascript + "</script>");
-
-            builder.append("  </BODY>");
-            builder.append("</HTML>");
-
-            return Response.status(Response.Status.OK)
-                    .type(MediaType.TEXT_HTML_TYPE)
-                    .entity(builder.toString()).build();
+            return "<script>" + javascript + "</script>";
         }
-
     }
 
     // https://openid.net/specs/openid-financial-api-jarm-ID1.html

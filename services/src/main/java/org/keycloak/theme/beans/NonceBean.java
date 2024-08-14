@@ -1,4 +1,4 @@
-package org.keycloak.forms.login.freemarker.model;
+package org.keycloak.theme.beans;
 
 import org.keycloak.headers.SecurityHeadersProvider;
 import org.keycloak.models.KeycloakSession;

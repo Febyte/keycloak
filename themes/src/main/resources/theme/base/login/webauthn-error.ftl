@@ -4,7 +4,7 @@
         ${kcSanitize(msg("webauthn-error-title"))?no_esc}
     <#elseif section = "form">
 
-        <script type="text/javascript">
+        <script nonce="${nonce.script}">
             refreshPage = () => {
                 document.getElementById('isSetRetry').value = 'retry';
                 document.getElementById('executionValue').value = '${execution}';

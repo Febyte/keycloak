@@ -6,7 +6,7 @@
         <div id="kc-form">
           <div id="kc-form-wrapper">
             <#if realm.password>
-                <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}" method="post">
+                <form id="kc-form-login" action="${url.loginAction}" method="post">
                     <#if !usernameHidden??>
                         <div class="${properties.kcFormGroupClass!}">
                             <label for="username" class="${properties.kcLabelClass!}"><#if !realm.loginWithEmailAllowed>${msg("username")}<#elseif !realm.registrationEmailAsUsername>${msg("usernameOrEmail")}<#else>${msg("email")}</#if></label>
@@ -22,6 +22,8 @@
                             </#if>
 
                         </div>
+                    <#else>
+                        <input name="username" value="${(login.username!'')}" type="hidden" autocomplete="username" />
                     </#if>
 
                     <div class="${properties.kcFormGroupClass!}">
@@ -74,6 +76,17 @@
                           <input tabindex="7" class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}" name="login" id="kc-login" type="submit" value="${msg("doLogIn")}"/>
                       </div>
                 </form>
+                <script nonce="${nonce.script}">
+                    document.getElementById("kc-form-login").onsubmit = () => {
+                        document.querySelector("#kc-form-login input[name='login']").disabled = true;
+
+                        <#if usernameHidden??>
+                            document.querySelector("#kc-form-login input[name='username']").disabled = true;
+                        </#if>
+
+                        return true;
+                    };
+                </script>
             </#if>
             </div>
         </div>

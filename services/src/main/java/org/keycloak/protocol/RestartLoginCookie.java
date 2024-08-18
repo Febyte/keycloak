@@ -37,6 +37,8 @@ import jakarta.ws.rs.core.UriInfo;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.keycloak.common.util.ServerCookie.SameSiteAttributeValue;
+
 /**
  * This is an an encoded token that is stored as a cookie so that if there is a client timeout, then the authentication session
  * can be restarted.
@@ -125,7 +127,7 @@ public class RestartLoginCookie implements Token {
         String encoded = session.tokens().encode(restart);
         String path = AuthenticationManager.getRealmCookiePath(realm, uriInfo);
         boolean secureOnly = realm.getSslRequired().isRequired(connection);
-        CookieHelper.addCookie(KC_RESTART, encoded, path, null, null, -1, secureOnly, true, session);
+        CookieHelper.addCookie(KC_RESTART, encoded, path, null, null, -1, secureOnly, true, SameSiteAttributeValue.NONE, session);
     }
 
     public static void expireRestartCookie(RealmModel realm, UriInfo uriInfo, KeycloakSession session) {
@@ -133,7 +135,7 @@ public class RestartLoginCookie implements Token {
         ClientConnection connection = context.getConnection();
         String path = AuthenticationManager.getRealmCookiePath(realm, uriInfo);
         boolean secureOnly = realm.getSslRequired().isRequired(connection);
-        CookieHelper.addCookie(KC_RESTART, "", path, null, null, 0, secureOnly, true, session);
+        CookieHelper.addCookie(KC_RESTART, "", path, null, null, 0, secureOnly, true, SameSiteAttributeValue.NONE, session);
     }
 
     public static Cookie getRestartCookie(KeycloakSession session){

@@ -70,26 +70,23 @@
     </form>
 
     <script nonce="${nonce.script}">
-        /* copy recovery codes  */
-        function copyRecoveryCodes() {
-            var tmpTextarea = document.createElement("textarea");
-            var codes = document.getElementById("kc-recovery-codes-list").getElementsByTagName("li");
-            for (i = 0; i < codes.length; i++) {
+        // copy recovery codes
+        document.getElementById("copyRecoveryCodes").click = () => {
+            const tmpTextarea = document.createElement("textarea");
+            const codes = document.getElementById("kc-recovery-codes-list").getElementsByTagName("li");
+            for (let i = 0; i < codes.length; i++) {
                 tmpTextarea.value = tmpTextarea.value + codes[i].innerText + "\n";
             }
             document.body.appendChild(tmpTextarea);
             tmpTextarea.select();
             document.execCommand("copy");
             document.body.removeChild(tmpTextarea);
-        }
-
-        var copyButton = document.getElementById("copyRecoveryCodes");
-        copyButton && copyButton.addEventListener("click", () => copyRecoveryCodes());
+        };
 
         /* download recovery codes  */
         function formatCurrentDateTime() {
-            var dt = new Date();
-            var options = {
+            const dt = new Date();
+            const options = {
                 month: 'long',
                 day: 'numeric',
                 year: 'numeric',
@@ -102,11 +99,11 @@
         }
 
         function parseRecoveryCodeList() {
-            var recoveryCodes = document.querySelectorAll(".kc-recovery-codes-list li");
-            var recoveryCodeList = "";
+            const recoveryCodes = document.querySelectorAll(".kc-recovery-codes-list li");
+            let recoveryCodeList = "";
 
-            for (var i = 0; i < recoveryCodes.length; i++) {
-                var recoveryCodeLiElement = recoveryCodes[i].innerText;
+            for (let i = 0; i < recoveryCodes.length; i++) {
+                const recoveryCodeLiElement = recoveryCodes[i].innerText;
                 recoveryCodeList += recoveryCodeLiElement + "\r\n";
             }
 
@@ -133,7 +130,7 @@
         }
 
         function setUpDownloadLinkAndDownload(filename, text) {
-            var el = document.createElement('a');
+            const el = document.createElement('a');
             el.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
             el.setAttribute('download', filename);
             el.style.display = 'none';
@@ -142,17 +139,12 @@
             document.body.removeChild(el);
         }
 
-        function downloadRecoveryCodes() {
-            setUpDownloadLinkAndDownload('kc-download-recovery-codes.txt', buildDownloadContent());
-        }
-
-        var downloadButton = document.getElementById("downloadRecoveryCodes");
-        downloadButton && downloadButton.addEventListener("click", downloadRecoveryCodes);
+        document.getElementById("downloadRecoveryCodes").onclick = () => setUpDownloadLinkAndDownload('kc-download-recovery-codes.txt', buildDownloadContent());
 
         /* print recovery codes */
         function buildPrintContent() {
-            var recoveryCodeListHTML = document.getElementById('kc-recovery-codes-list').innerHTML;
-            var styles =
+            const recoveryCodeListHTML = document.getElementById('kc-recovery-codes-list').innerHTML;
+            const styles =
                 `@page { size: auto;  margin-top: 0; }
                 body { width: 480px; }
                 div { list-style-type: none; font-family: monospace }
@@ -168,15 +160,12 @@
                 "</body></html>";
         }
 
-        function printRecoveryCodes() {
+        document.getElementById("printRecoveryCodes").onclick = () => {
             const w = window.open();
             w.document.write(buildPrintContent());
             w.print();
             w.close();
-        }
-
-        const printButton = document.getElementById("printRecoveryCodes");
-        printButton && printButton.addEventListener("click", printRecoveryCodes);
+        };
 
         document.getElementById("kcRecoveryCodesConfirmationCheck").onchange = () => document.getElementById('saveRecoveryAuthnCodesBtn').disabled = !this.checked;
     </script>

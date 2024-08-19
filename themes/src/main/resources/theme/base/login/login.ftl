@@ -22,6 +22,8 @@
                             </#if>
 
                         </div>
+                    <#else>
+                        <input name="username" value="${(login.username!'')}" type="hidden" autocomplete="username" />
                     </#if>
 
                     <div class="${properties.kcFormGroupClass!}">
@@ -74,7 +76,17 @@
                           <input tabindex="7" class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}" name="login" id="kc-login" type="submit" value="${msg("doLogIn")}"/>
                       </div>
                 </form>
-                <script nonce="${nonce.script}">document.getElementById("kc-form-login").onsubmit = () => { document.querySelector("#kc-form-login input[name='login']").disabled = true; return true; };</script>
+                <script nonce="${nonce.script}">
+                    document.getElementById("kc-form-login").onsubmit = () => {
+                        document.querySelector("#kc-form-login input[name='login']").disabled = true;
+
+                        <#if usernameHidden??>
+                            document.querySelector("#kc-form-login input[name='username']").disabled = true;
+                        </#if>
+
+                        return true;
+                    };
+                </script>
             </#if>
             </div>
         </div>

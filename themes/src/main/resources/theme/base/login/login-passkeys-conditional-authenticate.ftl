@@ -90,7 +90,7 @@
                         </form>
                     </#if>
                     <div id="kc-form-passkey-button" class="${properties.kcFormButtonsClass!}" style="display:none">
-                        <input id="authenticateWebAuthnButton" type="button" onclick="doAuthenticate([], "${rpId}", "${challenge}", ${isUserIdentified}, ${createTimeout}, "${userVerification}", "${msg("passkey-unsupported-browser-text")?no_esc}")" autofocus="autofocus"
+                        <input id="authenticateWebAuthnButton" type="button" autofocus="autofocus"
                             value="${kcSanitize(msg("passkey-doAuthenticate"))}"
                             class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"/>
                     </div>
@@ -130,6 +130,10 @@
             };
 
             document.addEventListener("DOMContentLoaded", (event) => initAuthenticate(args));
+        </script>
+
+        <script nonce="${nonce.script}">
+            document.querySelectorAll("#authenticateWebAuthnButton")[0].onclick = () => doAuthenticate([], "${rpId}", "${challenge}", ${isUserIdentified}, ${createTimeout}, "${userVerification}", "${msg("passkey-unsupported-browser-text")?no_esc}");
         </script>
 
     <#elseif section = "info">

@@ -50,7 +50,7 @@
                                    name="login" id="kc-login" type="submit" value="${msg("doLogIn")}"/>
                         </div>
                     </form>
-                    <script nonce="${nonce.script}">document.getElementById("kc-form-login").onsubmit = function () { document.querySelector("#kc-form-login input[name='login']").disabled = true; return true; };</script>
+                    <script nonce="${nonce.script}">document.getElementById("kc-form-login").onsubmit = () => { document.querySelector("#kc-form-login input[name='login']").disabled = true; return true; };</script>
                 </#if>
             </div>
         </div>

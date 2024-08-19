@@ -45,7 +45,7 @@
                     </div>
                 </form>
                 <script nonce="${nonce.script}">
-                    document.getElementById("kc-form-login").onsubmit = function () {
+                    document.getElementById("kc-form-login").onsubmit = () => {
                         document.querySelector("#kc-form-login input[name='username']").disabled = true;
                         document.querySelector("#kc-form-login input[name='login']").disabled = true;
 

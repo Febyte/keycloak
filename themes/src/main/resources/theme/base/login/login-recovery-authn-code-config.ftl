@@ -40,9 +40,7 @@
 
     <!-- confirmation checkbox -->
     <div class="${properties.kcFormOptionsClass!}">
-        <input class="${properties.kcCheckInputClass!}" type="checkbox" id="kcRecoveryCodesConfirmationCheck" name="kcRecoveryCodesConfirmationCheck"
-        onchange="document.getElementById('saveRecoveryAuthnCodesBtn').disabled = !this.checked;"
-        />
+        <input class="${properties.kcCheckInputClass!}" type="checkbox" id="kcRecoveryCodesConfirmationCheck" name="kcRecoveryCodesConfirmationCheck" />
         <label for="kcRecoveryCodesConfirmationCheck">${msg("recovery-codes-confirmation-message")}</label>
     </div>
 
@@ -86,9 +84,7 @@
         }
 
         var copyButton = document.getElementById("copyRecoveryCodes");
-        copyButton && copyButton.addEventListener("click", function () {
-            copyRecoveryCodes();
-        });
+        copyButton && copyButton.addEventListener("click", () => copyRecoveryCodes());
 
         /* download recovery codes  */
         function formatCurrentDateTime() {
@@ -173,14 +169,16 @@
         }
 
         function printRecoveryCodes() {
-            var w = window.open();
+            const w = window.open();
             w.document.write(buildPrintContent());
             w.print();
             w.close();
         }
 
-        var printButton = document.getElementById("printRecoveryCodes");
+        const printButton = document.getElementById("printRecoveryCodes");
         printButton && printButton.addEventListener("click", printRecoveryCodes);
+
+        document.getElementById("kcRecoveryCodesConfirmationCheck").onchange = () => document.getElementById('saveRecoveryAuthnCodesBtn').disabled = !this.checked;
     </script>
 </#if>
 </@layout.registrationLayout>

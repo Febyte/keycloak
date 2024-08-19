@@ -148,10 +148,10 @@
                       <input type="hidden" name="tryAnotherWay" value="on"/>
                       <a href="#" id="try-another-way">${msg("doTryAnotherWay")}</a>
                       <script nonce="${nonce.script}">
-                          document.getElementById("try-another-way").onclick = function () {
+                          document.getElementById("try-another-way").onclick = () => {
                               document.forms['kc-select-try-another-way-form'].submit();
                               return false;
-                          }
+                          };
                       </script>
                   </div>
               </form>

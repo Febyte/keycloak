@@ -1,7 +1,7 @@
-import { CodeEditor, Language } from "@patternfly/react-code-editor";
+import CodeEditor from "../../components/CodeEditor";
+import { json } from "@codemirror/lang-json";
 import { ActionGroup, Button, Form, PageSection } from "@patternfly/react-core";
-import type { editor } from "monaco-editor";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAlerts } from "@keycloak/keycloak-ui-shared";
 import { prettyPrintJSON } from "../../util";
@@ -11,36 +11,33 @@ export const JsonEditorTab = () => {
   const { config, save, isSaving } = useUserProfile();
   const { t } = useTranslation();
   const { addError } = useAlerts();
-  const [editor, setEditor] = useState<editor.IStandaloneCodeEditor>();
+  const [editor, setEditor] = useState<string>();
 
-  useEffect(() => resetCode(), [config, editor]);
+  const resetCode = useCallback(() => {
+    setEditor(config ? prettyPrintJSON(config) : "");
+  }, [config]);
 
-  function resetCode() {
-    editor?.setValue(config ? prettyPrintJSON(config) : "");
-  }
+  useEffect(() => resetCode(), [resetCode]);
 
   async function handleSave() {
-    const value = editor?.getValue();
-
-    if (!value) {
+    if (!editor) {
       return;
     }
 
     try {
-      await save(JSON.parse(value));
+      await save(JSON.parse(editor));
     } catch (error) {
       addError("invalidJsonError", error);
-      return;
     }
   }
 
   return (
     <PageSection variant="light">
       <CodeEditor
-        language={Language.json}
+        language={json()}
         height="30rem"
-        onEditorDidMount={(editor) => setEditor(editor)}
-        isLanguageLabelVisible
+        code={editor}
+        onChange={setEditor}
       />
       <Form>
         <ActionGroup>

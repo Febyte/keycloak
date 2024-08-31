@@ -39,13 +39,6 @@ function Keycloak (config) {
 
     kc.didInitialize = false;
 
-    var scripts = document.getElementsByTagName('script');
-    for (var i = 0; i < scripts.length; i++) {
-        if ((scripts[i].src.indexOf('keycloak.js') !== -1 || scripts[i].src.indexOf('keycloak.min.js') !== -1) && scripts[i].src.indexOf('version=') !== -1) {
-            kc.iframeVersion = scripts[i].src.substring(scripts[i].src.indexOf('version=') + 8).split('&')[0];
-        }
-    }
-
     var useNonce = true;
     var logInfo = createLogger(console.info);
     var logWarn = createLogger(console.warn);
@@ -846,20 +839,8 @@ function Keycloak (config) {
                     logout: function() {
                         return getRealmUrl() + '/protocol/openid-connect/logout';
                     },
-                    checkSessionIframe: function() {
-                        var src = getRealmUrl() + '/protocol/openid-connect/login-status-iframe.html';
-                        if (kc.iframeVersion) {
-                            src = src + '?version=' + kc.iframeVersion;
-                        }
-                        return src;
-                    },
-                    thirdPartyCookiesIframe: function() {
-                        var src = getRealmUrl() + '/protocol/openid-connect/3p-cookies/step1.html';
-                        if (kc.iframeVersion) {
-                            src = src + '?version=' + kc.iframeVersion;
-                        }
-                        return src;
-                    },
+                    checkSessionIframe: () => getRealmUrl() + '/protocol/openid-connect/login-status-iframe.html',
+                    thirdPartyCookiesIframe: () => getRealmUrl() + '/protocol/openid-connect/3p-cookies/step1.html',
                     register: function() {
                         return getRealmUrl() + '/protocol/openid-connect/registrations';
                     },

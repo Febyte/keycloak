@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormGroup } from "@patternfly/react-core";
-import { CodeEditor, Language } from "@patternfly/react-code-editor";
+import CodeEditor from "../../../components/CodeEditor";
+import { javascript } from "@codemirror/lang-javascript";
 
 import { HelpItem } from "@keycloak/keycloak-ui-shared";
 
@@ -29,7 +30,7 @@ export const JavaScript = () => {
             onChange={field.onChange}
             code={field.value}
             height="600px"
-            language={Language.javascript}
+            language={javascript()}
             isReadOnly={true}
           />
         )}

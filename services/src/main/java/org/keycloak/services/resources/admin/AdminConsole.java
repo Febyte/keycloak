@@ -25,7 +25,9 @@ import jakarta.ws.rs.OPTIONS;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.NewCookie.SameSite;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.NoCache;
 import org.keycloak.Config;
@@ -53,7 +55,6 @@ import org.keycloak.services.managers.ClientManager;
 import org.keycloak.services.managers.RealmManager;
 import org.keycloak.services.util.ViteManifest;
 import org.keycloak.theme.FreeMarkerException;
-import org.keycloak.theme.Theme;
 import org.keycloak.theme.beans.NonceBean;
 import org.keycloak.theme.freemarker.FreeMarkerProvider;
 import org.keycloak.urls.UrlType;
@@ -61,7 +62,6 @@ import org.keycloak.utils.MediaType;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -349,6 +349,8 @@ public class AdminConsole {
             final var map = new HashMap<String, Object>();
             final var theme = AdminRoot.getTheme(session, realm);
 
+            final String resourceUrl = Urls.themeRoot(adminBaseUri).getPath() + "/admin/" + theme.getName();
+
             map.put("serverBaseUrl", serverBaseUrl);
             map.put("adminBaseUrl", adminBaseUrl);
             // TODO: Some variables are deprecated and only exist to provide backwards compatibility for older themes, they should be removed in a future version.
@@ -356,7 +358,7 @@ public class AdminConsole {
             map.put("authServerUrl", serverBaseUrl); // Superseded by 'serverBaseUrl', remove in the future.
             map.put("authUrl", adminBaseUrl); // Superseded by 'adminBaseUrl', remove in the future.
             map.put("consoleBaseUrl", Urls.adminConsoleRoot(adminBaseUri, realm.getName()).getPath());
-            map.put("resourceUrl", Urls.themeRoot(adminBaseUri).getPath() + "/admin/" + theme.getName());
+            map.put("resourceUrl", resourceUrl);
             map.put("resourceCommonUrl", Urls.themeRoot(adminBaseUri).getPath() + "/common/keycloak");
             map.put("keycloakJsUrl", adminBaseUrl + "/js/keycloak.js?version=" + Version.RESOURCES_VERSION);
             map.put("masterRealm", Config.getAdminRealm());
@@ -385,12 +387,21 @@ public class AdminConsole {
                 map.put("entryImports", entryImports);
             }
 
-            // JAS: Insert nonces into CSP header and attributes.
-            map.put("nonce", new NonceBean(session));
+            // JAS: Insert nonces into CSP header, attribute map, and style cookie (for static assets).
+            NonceBean nonce = new NonceBean(session);
+            map.put("nonce", nonce);
+            NewCookie nonceStyleCookie = new NewCookie.Builder(Constants.COOKIE_NONCE_STYLE_NAME)
+                    .path(resourceUrl)
+                    .secure(true)
+                    .httpOnly(true)
+                    .sameSite(SameSite.NONE)
+                    .value(nonce.getStyle())
+                    .build();
 
             final var freeMarkerUtil = session.getProvider(FreeMarkerProvider.class);
             final var result = freeMarkerUtil.processTemplate(map, "index.ftl", theme);
-            final var builder = Response.status(Response.Status.OK).type(MediaType.TEXT_HTML_UTF_8).language(Locale.ENGLISH).entity(result);
+            final var builder = Response.status(Response.Status.OK).type(MediaType.TEXT_HTML_UTF_8)
+                    .language(Locale.ENGLISH).entity(result).cookie(nonceStyleCookie);
 
             // Allow iframes to be embedded from the server if the admin console is running on a different URL.
             if (!adminBaseUri.equals(serverBaseUri)) {

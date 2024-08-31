@@ -42,14 +42,14 @@ public class ThirdPartyCookiesIframeEndpoint {
     @GET
     @Path("step1.html")
     @Produces(MediaType.TEXT_HTML_UTF_8)
-    public Response step1(@QueryParam("version") String version) {
-        return returnIframeFromResources("3p-cookies-step1.html", version, session);
+    public Response step1() {
+        return returnIframeFromResources("3p-cookies-step1.html", session);
     }
 
     @GET
     @Path("step2.html")
     @Produces(MediaType.TEXT_HTML_UTF_8)
-    public Response step2(@QueryParam("version") String version) {
-        return returnIframeFromResources("3p-cookies-step2.html", version, session);
+    public Response step2() {
+        return returnIframeFromResources("3p-cookies-step2.html", session);
     }
 }

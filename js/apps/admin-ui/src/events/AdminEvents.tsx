@@ -4,7 +4,8 @@ import {
   SelectVariant,
   TextControl,
 } from "@keycloak/keycloak-ui-shared";
-import { CodeEditor, Language } from "@patternfly/react-code-editor";
+import CodeEditor from "../components/CodeEditor";
+import { json } from "@codemirror/lang-json";
 import {
   ActionGroup,
   Button,
@@ -240,13 +241,7 @@ export const AdminEvents = () => {
           data-testid="representation-dialog"
           onClose={() => setRepresentationEvent(undefined)}
         >
-          <CodeEditor
-            isLineNumbersVisible
-            isReadOnly
-            code={code}
-            language={Language.json}
-            height="8rem"
-          />
+          <CodeEditor isReadOnly code={code} language={json()} height="8rem" />
         </DisplayDialog>
       )}
       <KeycloakDataTable

@@ -1,4 +1,5 @@
 import { fetchWithError } from "@keycloak/keycloak-admin-client";
+import { xml } from "@codemirror/lang-xml";
 import type IdentityProviderRepresentation from "@keycloak/keycloak-admin-client/lib/defs/identityProviderRepresentation";
 import {
   FormErrorText,
@@ -113,6 +114,7 @@ export const SamlConnectSettings = () => {
             <FileUploadForm
               id="kc-import-config"
               extension=".xml"
+              language={xml()}
               hideDefaultPreview
               unWrap
               validated={errors.discoveryError ? "error" : "default"}

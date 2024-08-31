@@ -1,4 +1,5 @@
-import { CodeEditor, Language } from "@patternfly/react-code-editor";
+import CodeEditor from "../../components/CodeEditor";
+import { javascript } from "@codemirror/lang-javascript";
 import { FormGroup } from "@patternfly/react-core";
 import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -39,11 +40,10 @@ export const ScriptComponent = ({
             id={name!}
             data-testid={name}
             isReadOnly={isDisabled}
-            type="text"
             onChange={field.onChange}
             code={field.value}
             height="600px"
-            language={Language.javascript}
+            language={javascript()}
           />
         )}
       />

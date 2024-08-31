@@ -32,16 +32,9 @@ import java.util.UUID;
 public class IframeUtil {
     private static final String NONCE_IDENTIFIER = "$NONCE_SCRIPT";
 
-    public static Response returnIframeFromResources(String fileName, String version, KeycloakSession session) {
-        CacheControl cacheControl;
-        if (version != null) {
-            if (!version.equals(Version.RESOURCES_VERSION)) {
-                return Response.status(Response.Status.NOT_FOUND).build();
-            }
-            cacheControl = CacheControlUtil.getDefaultCacheControl();
-        } else {
-            cacheControl = CacheControlUtil.noCache();
-        }
+    public static Response returnIframeFromResources(String fileName, KeycloakSession session) {
+        // JAS: The response cannot be cached. Each body is unique.
+        CacheControl cacheControl = CacheControlUtil.noCache();
 
         InputStream resource = IframeUtil.class.getResourceAsStream(fileName);
         if (resource != null) {

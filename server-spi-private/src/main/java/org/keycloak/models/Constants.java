@@ -187,4 +187,7 @@ public final class Constants {
 
     //attribute name used to mark a temporary admin user/service account as temporary
     public static final String IS_TEMP_ADMIN_ATTR_NAME = "is_temporary_admin";
+
+    // JAS: Cookie name for admin console style nonce.
+    public static final String COOKIE_NONCE_STYLE_NAME = "KEYCLOAK_NONCE_STYLE";
 }

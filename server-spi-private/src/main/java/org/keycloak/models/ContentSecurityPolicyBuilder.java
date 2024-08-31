@@ -37,15 +37,14 @@ public class ContentSecurityPolicyBuilder {
     private final Map<String, String> directives = new LinkedHashMap<>();
 
     public static ContentSecurityPolicyBuilder create() {
+
         return new ContentSecurityPolicyBuilder()
                 .add(DIRECTIVE_NAME_FORM_ACTION, DIRECTIVE_VALUE_SELF)
                 .add(DIRECTIVE_NAME_FRAME_SRC, DIRECTIVE_VALUE_SELF)
                 .add(DIRECTIVE_NAME_FRAME_ANCESTORS, DIRECTIVE_VALUE_SELF)
                 .add(DIRECTIVE_NAME_OBJECT_SRC, DIRECTIVE_VALUE_NONE)
                 .add(DIRECTIVE_NAME_SCRIPT_SRC, DIRECTIVE_VALUE_SELF)
-                .add(DIRECTIVE_NAME_SCRIPT_SRC, DIRECTIVE_VALUE_UNSAFE_INLINE)
-                .add(DIRECTIVE_NAME_STYLE_SRC, DIRECTIVE_VALUE_SELF)
-                .add(DIRECTIVE_NAME_STYLE_SRC, DIRECTIVE_VALUE_UNSAFE_INLINE);
+                .add(DIRECTIVE_NAME_STYLE_SRC, DIRECTIVE_VALUE_SELF);
     }
 
     public static ContentSecurityPolicyBuilder create(String directives) {
@@ -97,10 +96,10 @@ public class ContentSecurityPolicyBuilder {
 
     public ContentSecurityPolicyBuilder addScriptSrc(String scriptSrc) {
         boolean nonceOrHash = scriptSrc.trim().startsWith("'nonce-") || scriptSrc.trim().startsWith("'hash-");
-        boolean isDefault = "'self' 'unsafe-inline'".equals(directives.get(DIRECTIVE_NAME_SCRIPT_SRC));
+        String directive = directives.get(DIRECTIVE_NAME_SCRIPT_SRC);
 
         // JAS: Do not add a nonce or hash if 'unsafe-inline' is defined.
-        if (isDefault && nonceOrHash) {
+        if(directive != null && directive.contains(DIRECTIVE_VALUE_UNSAFE_INLINE) && nonceOrHash) {
             return this;
         }
 
@@ -118,10 +117,10 @@ public class ContentSecurityPolicyBuilder {
 
     public ContentSecurityPolicyBuilder addStyleSrc(String styleSrc) {
         boolean nonceOrHash = styleSrc.trim().startsWith("'nonce-") || styleSrc.trim().startsWith("'hash-");
-        boolean isDefault = "'self' 'unsafe-inline'".equals(directives.get(DIRECTIVE_NAME_STYLE_SRC));
+        String directive = directives.get(DIRECTIVE_NAME_STYLE_SRC);
 
         // JAS: Do not add a nonce or hash if 'unsafe-inline' is defined.
-        if (isDefault && nonceOrHash) {
+        if(directive != null && directive.contains(DIRECTIVE_VALUE_UNSAFE_INLINE) && nonceOrHash) {
             return this;
         }
 

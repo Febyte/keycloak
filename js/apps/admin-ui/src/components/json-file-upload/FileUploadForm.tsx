@@ -1,4 +1,5 @@
-import { CodeEditor, Language } from "@patternfly/react-code-editor";
+import CodeEditor from "../CodeEditor";
+import { LanguageSupport } from "@codemirror/language";
 import {
   Button,
   FormGroup,
@@ -36,7 +37,7 @@ export type FileUploadFormProps = Omit<FileUploadProps, "onChange"> & {
   onChange: (value: string) => void;
   helpText?: string;
   unWrap?: boolean;
-  language?: Language;
+  language: LanguageSupport;
 };
 
 export const FileUploadForm = ({
@@ -151,7 +152,6 @@ export const FileUploadForm = ({
           >
             {!rest.hideDefaultPreview && (
               <CodeEditor
-                isLineNumbersVisible
                 code={fileUpload.value}
                 language={language}
                 height="128px"

@@ -16,6 +16,7 @@
  */
 package org.keycloak.services.resources;
 
+import jakarta.ws.rs.CookieParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.OPTIONS;
 import jakarta.ws.rs.Path;
@@ -27,6 +28,7 @@ import org.keycloak.common.Version;
 import org.keycloak.common.util.MimeTypeUtil;
 import org.keycloak.encoding.ResourceEncodingHelper;
 import org.keycloak.encoding.ResourceEncodingProvider;
+import org.keycloak.models.Constants;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.services.ServicesLogger;
@@ -34,7 +36,9 @@ import org.keycloak.services.cors.Cors;
 import org.keycloak.services.util.CacheControlUtil;
 import org.keycloak.services.util.LocaleUtil;
 import org.keycloak.theme.Theme;
+import org.keycloak.utils.ReplacingInputStream;
 
+import jakarta.ws.rs.core.CacheControl;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
@@ -64,6 +68,9 @@ public class ThemeResource {
     @Context
     private KeycloakSession session;
 
+    // JAS: Constant to find and replace for nonce injection.
+    private static final String NONCE_STYLE_GUID = "f55988f2-ae63-4969-ad0e-df696a57fbec";
+
     /**
      * Get theme content
      *
@@ -74,7 +81,7 @@ public class ThemeResource {
      */
     @GET
     @Path("/{version}/{themeType}/{themeName}/{path:.*}")
-    public Response getResource(@PathParam("version") String version, @PathParam("themeType") String themType, @PathParam("themeName") String themeName, @PathParam("path") String path) {
+    public Response getResource(@CookieParam(Constants.COOKIE_NONCE_STYLE_NAME) String nonceStyle, @PathParam("version") String version, @PathParam("themeType") String themType, @PathParam("themeName") String themeName, @PathParam("path") String path) {
         if (!version.equals(Version.RESOURCES_VERSION)) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -82,7 +89,10 @@ public class ThemeResource {
         try {
             String contentType = MimeTypeUtil.getContentType(path);
             Theme theme = session.theme().getTheme(themeName, Theme.Type.valueOf(themType.toUpperCase()));
-            ResourceEncodingProvider encodingProvider = session.theme().isCacheEnabled() ? ResourceEncodingHelper.getResourceEncodingProvider(session, contentType) : null;
+
+            // JAS: We need to check JavaScript sources for the nonce, so no encoding.
+            boolean replacingNonce = nonceStyle != null && "text/javascript".equals(contentType);
+            ResourceEncodingProvider encodingProvider = session.theme().isCacheEnabled() && !replacingNonce ? ResourceEncodingHelper.getResourceEncodingProvider(session, contentType) : null;
 
             InputStream resource;
             if (encodingProvider != null) {
@@ -92,7 +102,13 @@ public class ThemeResource {
             }
 
             if (resource != null) {
-                Response.ResponseBuilder rb = Response.ok(resource).type(contentType).cacheControl(CacheControlUtil.getDefaultCacheControl());
+                CacheControl cacheControl = CacheControlUtil.getDefaultCacheControl();
+                if (replacingNonce) {
+                    resource = new ReplacingInputStream(resource, NONCE_STYLE_GUID, nonceStyle);
+                    cacheControl = CacheControlUtil.noCache();
+                }
+
+                Response.ResponseBuilder rb = Response.ok(resource).type(contentType).cacheControl(cacheControl);
                 if (encodingProvider != null) {
                     rb.encoding(encodingProvider.getEncoding());
                 }

@@ -39,7 +39,6 @@ import org.keycloak.representations.idm.RealmRepresentation;
 import org.keycloak.testsuite.AbstractKeycloakTest;
 import org.keycloak.testsuite.ActionURIUtils;
 import org.keycloak.testsuite.oidc.PkceGenerator;
-import org.keycloak.testsuite.runonserver.ServerVersion;
 import org.keycloak.testsuite.updaters.RealmAttributeUpdater;
 import org.keycloak.testsuite.util.AdminClientUtil;
 import org.keycloak.testsuite.util.RealmBuilder;
@@ -188,20 +187,12 @@ public class LoginStatusIframeEndpointTest extends AbstractKeycloakTest {
 
     @Test
     public void checkIframeCache() throws IOException {
-        String version = testingClient.server().fetch(new ServerVersion());
-
         try (CloseableHttpClient client = HttpClients.createDefault()) {
             HttpGet get = new HttpGet(suiteContext.getAuthServerInfo().getContextRoot() + "/auth/realms/master/protocol/openid-connect/login-status-iframe.html");
             CloseableHttpResponse response = client.execute(get);
 
             assertEquals(200, response.getStatusLine().getStatusCode());
             assertEquals("no-cache, must-revalidate, no-transform, no-store", response.getHeaders("Cache-Control")[0].getValue());
-
-            get = new HttpGet(suiteContext.getAuthServerInfo().getContextRoot() + "/auth/realms/master/protocol/openid-connect/login-status-iframe.html?version=" + version);
-            response = client.execute(get);
-
-            assertEquals(200, response.getStatusLine().getStatusCode());
-            assertTrue(response.getHeaders("Cache-Control")[0].getValue().contains("max-age"));
         }
     }
 

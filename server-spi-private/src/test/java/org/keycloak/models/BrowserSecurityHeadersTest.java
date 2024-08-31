@@ -20,21 +20,21 @@ public class BrowserSecurityHeadersTest {
 
     @Test
     public void contentSecurityPolicyBuilderTest() {
-        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';", ContentSecurityPolicyBuilder.create().build());
-        assertEquals("form-action 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';", ContentSecurityPolicyBuilder.create().frameSrc(null).build());
-        assertEquals("form-action 'self'; frame-src 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';", ContentSecurityPolicyBuilder.create().frameAncestors(null).build());
-        assertEquals("form-action 'self'; frame-src 'custom-frame-src'; frame-ancestors 'custom-frame-ancestors'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';", ContentSecurityPolicyBuilder.create().frameSrc("'custom-frame-src'").frameAncestors("'custom-frame-ancestors'").build());
-        assertEquals("form-action 'self'; frame-src localhost; frame-ancestors 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';", ContentSecurityPolicyBuilder.create().frameSrc("localhost").build());
-        assertEquals("form-action 'self'; frame-src 'self' localhost; frame-ancestors 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';", ContentSecurityPolicyBuilder.create().addFrameSrc("localhost").build());
-        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src localhost; style-src 'self' 'unsafe-inline';", ContentSecurityPolicyBuilder.create().scriptSrc("localhost").build());
-        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src localhost;", ContentSecurityPolicyBuilder.create().styleSrc("localhost").build());
+        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self'; style-src 'self';", ContentSecurityPolicyBuilder.create().build());
+        assertEquals("form-action 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self'; style-src 'self';", ContentSecurityPolicyBuilder.create().frameSrc(null).build());
+        assertEquals("form-action 'self'; frame-src 'self'; object-src 'none'; script-src 'self'; style-src 'self';", ContentSecurityPolicyBuilder.create().frameAncestors(null).build());
+        assertEquals("form-action 'self'; frame-src 'custom-frame-src'; frame-ancestors 'custom-frame-ancestors'; object-src 'none'; script-src 'self'; style-src 'self';", ContentSecurityPolicyBuilder.create().frameSrc("'custom-frame-src'").frameAncestors("'custom-frame-ancestors'").build());
+        assertEquals("form-action 'self'; frame-src localhost; frame-ancestors 'self'; object-src 'none'; script-src 'self'; style-src 'self';", ContentSecurityPolicyBuilder.create().frameSrc("localhost").build());
+        assertEquals("form-action 'self'; frame-src 'self' localhost; frame-ancestors 'self'; object-src 'none'; script-src 'self'; style-src 'self';", ContentSecurityPolicyBuilder.create().addFrameSrc("localhost").build());
+        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src localhost; style-src 'self';", ContentSecurityPolicyBuilder.create().scriptSrc("localhost").build());
+        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self'; style-src localhost;", ContentSecurityPolicyBuilder.create().styleSrc("localhost").build());
 
         // Adding a nonce or hash to 'unsafe-inline' should have no effect.
-        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';", ContentSecurityPolicyBuilder.create().addScriptSrc("'nonce-46cc8f91-509f-4f80-ba93-943431630d46'").build());
-        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';", ContentSecurityPolicyBuilder.create().addStyleSrc("'nonce-46cc8f91-509f-4f80-ba93-943431630d46'").build());
+        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self';", ContentSecurityPolicyBuilder.create().scriptSrc("'self' 'unsafe-inline'").addScriptSrc("'nonce-46cc8f91-509f-4f80-ba93-943431630d46'").build());
+        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline';", ContentSecurityPolicyBuilder.create().styleSrc("'self' 'unsafe-inline'").addStyleSrc("'nonce-46cc8f91-509f-4f80-ba93-943431630d46'").build());
 
-        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self' https://github.com; style-src 'self' 'unsafe-inline';", ContentSecurityPolicyBuilder.create().scriptSrc("'self'").addScriptSrc("https://github.com").build());
-        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' https://github.com;", ContentSecurityPolicyBuilder.create().styleSrc("'self'").addStyleSrc("https://github.com").build());
+        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self' https://github.com; style-src 'self';", ContentSecurityPolicyBuilder.create().addScriptSrc("https://github.com").build());
+        assertEquals("form-action 'self'; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self'; style-src 'self' https://github.com;", ContentSecurityPolicyBuilder.create().addStyleSrc("https://github.com").build());
     }
 
     private void assertParsedDirectives(String directives) {

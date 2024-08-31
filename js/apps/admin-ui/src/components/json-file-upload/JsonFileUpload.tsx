@@ -1,4 +1,4 @@
-import { Language } from "@patternfly/react-code-editor";
+import { json } from "@codemirror/lang-json";
 
 import { FileUploadForm, FileUploadFormProps } from "./FileUploadForm";
 
@@ -22,7 +22,7 @@ export const JsonFileUpload = ({ onChange, ...props }: JsonFileUploadProps) => {
   return (
     <FileUploadForm
       {...props}
-      language={Language.json}
+      language={json()}
       extension=".json"
       onChange={handleChange}
     />

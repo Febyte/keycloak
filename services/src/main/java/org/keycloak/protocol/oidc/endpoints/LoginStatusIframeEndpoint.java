@@ -47,8 +47,8 @@ public class LoginStatusIframeEndpoint {
 
     @GET
     @Produces(MediaType.TEXT_HTML_UTF_8)
-    public Response getLoginStatusIframe(@QueryParam("version") String version) {
-        return returnIframeFromResources("login-status-iframe.html", version, session);
+    public Response getLoginStatusIframe() {
+        return returnIframeFromResources("login-status-iframe.html", session);
     }
 
     @GET
